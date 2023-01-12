@@ -1,6 +1,5 @@
 from tqdm import tqdm
 
-
 def numberOfWays(startPos: int, endPos: int, k: int) -> int:
     """
     Solving Leetcode Problem.
@@ -15,33 +14,14 @@ def numberOfWays(startPos: int, endPos: int, k: int) -> int:
     reach the position endPos starting from startPos, such that you
     perform exactly k steps.
     """
-    # start with path of length 1
-    paths = [startPos]
-
-    # loop k times
-    for i in tqdm(range(k)):
-        for path in paths:
-            new_path = path.copy()
-            last_position = new_path[-1]
-
-            # exist fast if not going to make to end
-            if endPos - last_position > (k - i - 1):
-                continue
-            # path that goes to the left
-            new_path_left = new_path + [last_position - 1]
-
-            # path that goes to the right
-            new_path_right = new_path + [last_position - 1]
-
-            # add paths to the left and right
-            paths.append(new_path_left)
-            paths.append(new_path_right)
-
-    num_ways = 0
-    for path in paths:
-        if path[-1] == endPos:
-            new_ways += 1
-    return num_ways
+    #@cache
+    def dfs(s, left):
+        if left == 0:
+            if s == endPos:
+                return 1
+            return 0
+        return (dfs(s - 1, left-1) + dfs(s+1, left-1))%(10**9+7)
+    return dfs(startPos, k)%(10**9+7)
 
 
 def test_number_of_ways():
